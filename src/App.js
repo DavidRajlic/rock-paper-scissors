@@ -11,6 +11,8 @@ function App() {
       id: 1,
       name: "ROCK",
       img: rock,
+      beats: "SCISSORS",
+      loses: "PAPER",
       active: false
     },
 
@@ -18,6 +20,8 @@ function App() {
       id: 2,
       name: "PAPER",
       img: paper,
+      beats: "ROCK",
+      loses: "SCISSORS",
       active: false
     },
 
@@ -25,6 +29,8 @@ function App() {
       id: 3,
       name: "SCISSORS",
       img: scissors,
+      beats: "PAPER",
+      loses: "ROCK",
       active: false
     }
   ]);  
@@ -57,9 +63,14 @@ function App() {
     </div> 
   ))
 
-  const clickedName = rps.filter(id => id.active === true).map(filteredId=> (
-    filteredId.name
+  const clickedBeats = rps.filter(id => id.active === true).map(filteredId=> (
+    filteredId.beats
   ))
+
+  const clickedLoses = rps.filter(id => id.active === true).map(filteredId=> (
+    filteredId.loses
+  ))
+
 /*
   const ROCK = clickedName[0]==="ROCK"
   const PAPER = clickedName[0]==="PAPER"
@@ -72,19 +83,22 @@ function App() {
   ( "ROCK" < "PAPER" )
   ( "PAPER" < "SCISSORS" )
 */
-const match = (clickedName, rndName) => {
-  if(clickedName === rndName) {
-    console.log("DRAW")
-  }
-  if(clickedName >  rndName) {
+
+const [result, setResult] = useState("WIN")
+
+const match = (clickedBeats, rndName, clickedLoses, result) => {
+
+  if(clickedBeats === rndName) {
     console.log("WIN")
   }
-  if(clickedName < rndName) {
+  if(clickedLoses === rndName) {
     console.log("LOSE")
   }
+  if(clickedLoses != rndName && clickedBeats != rndName) {
+    console.log("DRAW")
+  }
 }
-match(clickedName[0], randomObject.name)
-
+match(clickedBeats[0], randomObject.name, clickedLoses[0], setResult )
 /*
   if(clickedName[0] === randomObject.name ) {
     
@@ -123,8 +137,8 @@ match(clickedName[0], randomObject.name)
         <div className={classVar}>
          <img className='notClicked' src={randomObject.img} alt="beda"/>
         </div>
-        <div>   </div>
       </div>
+      <div>   </div>
     </div>
   );
 }
