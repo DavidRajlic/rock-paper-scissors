@@ -37,13 +37,12 @@ function App() {
 
   const [classVar, setClassVar] = useState("randomObjectName");
   const [randomObject, setRandomObject] = useState(rps[0]);
+  const [result, setResult] = useState();
 
   // creating objects as images, adding onclick function to change border when clicked
   const objects = rps.map(object => (
     <img onClick={() => onClick(object.id)} key={object.id} className={`${object.active ? "clicked" : "notClicked"}`} src={object.img} alt="" /> 
   ));
-
-  // choose random object from rps array  
 
   // when image clicked change active status from false to true
   const onClick = id => {    
@@ -52,8 +51,26 @@ function App() {
     });
     setRPS(newRPS);
     setClassVar("randomObjectNamesVisual");
-    const randomNum = Math.floor(Math.random() * rps.length);    
-    setRandomObject(rps[randomNum]);        
+    const randomNum = Math.floor(Math.random() * newRPS.length);    
+    setRandomObject(newRPS[randomNum]);
+
+    const clickedBeats = newRPS.filter(id => id.active === true).map(filteredId=> (
+      filteredId.beats
+    ));
+
+    const clickedLoses = newRPS.filter(id => id.active === true).map(filteredId=> (
+      filteredId.loses
+    ));
+
+    if(clickedBeats[0] === newRPS[randomNum].name) {
+      setResult("WIN");
+    }
+    if(clickedLoses[0] === newRPS[randomNum].name) {
+      setResult("LOSE");
+    }
+    if(clickedLoses[0] !== newRPS[randomNum].name && clickedBeats[0] !== newRPS[randomNum].name) {
+      setResult("DRAW");
+    }
   };
 
   // find clicked object by filtering through rps array to find which one has active status equal to true (that object was clicked)
@@ -61,72 +78,8 @@ function App() {
     <div>
       <img key={filteredObject.id} className="notClicked" src={filteredObject.img} alt=""/> 
     </div> 
-  ))
+  ));
 
-  const clickedBeats = rps.filter(id => id.active === true).map(filteredId=> (
-    filteredId.beats
-  ))
-
-  const clickedLoses = rps.filter(id => id.active === true).map(filteredId=> (
-    filteredId.loses
-  ))
-
-/*
-  const ROCK = clickedName[0]==="ROCK"
-  const PAPER = clickedName[0]==="PAPER"
-  const SCISSORS = clickedName[0]==="SCISSORS"
-  console.log(ROCK)
-  console.log(PAPER)
-  */
- /*
-  ( "ROCK" > "SCISSORS" )
-  ( "ROCK" < "PAPER" )
-  ( "PAPER" < "SCISSORS" )
-*/
-
-const [result, setResult] = useState("WIN")
-
-const match = (clickedBeats, rndName, clickedLoses, result) => {
-
-  if(clickedBeats === rndName) {
-    console.log("WIN")
-  }
-  if(clickedLoses === rndName) {
-    console.log("LOSE")
-  }
-  if(clickedLoses != rndName && clickedBeats != rndName) {
-    console.log("DRAW")
-  }
-}
-match(clickedBeats[0], randomObject.name, clickedLoses[0], setResult )
-/*
-  if(clickedName[0] === randomObject.name ) {
-    
-  }
-
-  if(clickedName[0] === "ROCK" && randomObject.name === "SCISSORS" ) {
-    
-  }
-
-  if(clickedName[0] === "ROCK" && randomObject.name === "PAPER") {
-    
-  }
-  if(clickedName[0] === "PAPER" && randomObject.name === "SCISSORS") {
-    
-  }
-
-  if(clickedName[0] === "PAPER" && randomObject.name === "ROCK") {
-   
-  }
-
-  if(clickedName[0] === "SCISSORS" && randomObject.name === "ROCK") {
-   
-  }
-
-  if(clickedName[0] === "SCISSORS" && randomObject.name === "PAPER") {
-    
-  } 
-*/
   return (
     <div className="containerRPS">
       <div className="objectContainer">
@@ -138,7 +91,7 @@ match(clickedBeats[0], randomObject.name, clickedLoses[0], setResult )
          <img className='notClicked' src={randomObject.img} alt="beda"/>
         </div>
       </div>
-      <div>   </div>
+      <div>  {result} </div>
     </div>
   );
 }
